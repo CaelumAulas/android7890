@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,7 @@ public class ListaLivroFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ListView listView = view.findViewById(R.id.lista_livros);
+        RecyclerView recyclerView = view.findViewById(R.id.lista_livros);
 
         List<Livro> livros = new ArrayList<>();
 
@@ -40,8 +42,12 @@ public class ListaLivroFragment extends Fragment {
             livros.add(livro);
         }
 
-        LivroAdapter adapter = new LivroAdapter(livros);
 
-        listView.setAdapter(adapter);
+        RecyclerView.Adapter adapter = new LivroAdapter(livros);
+        recyclerView.setAdapter(adapter);
+
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
     }
 }
