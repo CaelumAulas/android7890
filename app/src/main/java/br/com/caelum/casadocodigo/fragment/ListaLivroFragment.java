@@ -49,7 +49,6 @@ public class ListaLivroFragment extends Fragment {
         RecyclerView.Adapter adapter = new LivroAdapter(livros);
         recyclerView.setAdapter(adapter);
 
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
     }
