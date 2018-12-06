@@ -7,19 +7,42 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.Serializable;
 
 import br.com.caelum.casadocodigo.R;
+import br.com.caelum.casadocodigo.modelo.Autor;
 import br.com.caelum.casadocodigo.modelo.Livro;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetalhesLivroFragment extends Fragment {
-   @BindView(R.id.detalhes_livro_nome) TextView campoNome;
+    @BindView(R.id.detalhes_livro_foto)
+    ImageView foto;
+    @BindView(R.id.detalhes_livro_nome)
+    TextView nome;
+    @BindView(R.id.detalhes_livro_autores)
+    TextView autores;
+    @BindView(R.id.detalhes_livro_comprar_fisico)
+    Button botaoComprarFisico;
+    @BindView(R.id.detalhes_livro_comprar_ebook)
+    Button botaoComprarEbook;
+    @BindView(R.id.detalhes_livro_comprar_ambos)
+    Button botaoComprarAmbos;
+    @BindView(R.id.detalhes_livro_descricao)
+    TextView descricao;
+    @BindView(R.id.detalhes_livro_data_publicacao)
+    TextView dataPublicacao;
+    @BindView(R.id.detalhes_livro_num_paginas)
+    TextView numPaginas;
+    @BindView(R.id.detalhes_livro_isbn)
+    TextView isbn;
 
-   public static DetalhesLivroFragment getInstanceWith(Livro livro) {
+
+    public static DetalhesLivroFragment getInstanceWith(Livro livro) {
        DetalhesLivroFragment detalhesLivroFragment = new DetalhesLivroFragment();
        Bundle bundle = new Bundle();
        bundle.putSerializable("livro", livro);
@@ -35,8 +58,36 @@ public class DetalhesLivroFragment extends Fragment {
 
         Bundle bundle = getArguments();
         Livro livro = (Livro) bundle.getSerializable("livro");
-        campoNome.setText(livro.getNome());
+        populaCamposCom(livro);
 
         return view;
+    }
+
+    private void populaCamposCom(Livro livro) {
+        nome.setText(livro.getNome());
+
+        String listaDeAutores = "";
+        for (Autor autor : livro.getAutores()) {
+            if (!listaDeAutores.isEmpty()) {
+                listaDeAutores += ", ";
+            }
+            listaDeAutores += autor.getNome();
+        }
+        autores.setText(listaDeAutores);
+
+        descricao.setText(livro.getDescricao());
+        numPaginas.setText(String.valueOf(livro.getNumPaginas()));
+        isbn.setText(livro.getISBN());
+        dataPublicacao.setText(livro.getDataPublicacao());
+
+
+        String textoComprarFisico = String.format("Comprar Livro Físico - R$ %.2f", livro.getValorFisico());
+        botaoComprarFisico.setText(textoComprarFisico);
+
+        String textoComprarEbook = String.format("Comprar Livro Ebook - R$ %.2f", livro.getValorVirtual());
+        botaoComprarEbook.setText(textoComprarEbook);
+
+        String textoComprarAmbos = String.format("Comprar Livro Físico - R$ %.2f", livro.getValorDoisJuntos());
+        botaoComprarAmbos.setText(textoComprarAmbos);
     }
 }
