@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.Serializable;
 
 import br.com.caelum.casadocodigo.R;
@@ -79,6 +81,8 @@ public class DetalhesLivroFragment extends Fragment {
         numPaginas.setText(String.valueOf(livro.getNumPaginas()));
         isbn.setText(livro.getISBN());
         dataPublicacao.setText(livro.getDataPublicacao());
+
+        Picasso.get().load(livro.getUrlFoto()).into(foto);
 
 
         String textoComprarFisico = String.format("Comprar Livro Físico - R$ %.2f", livro.getValorFisico());

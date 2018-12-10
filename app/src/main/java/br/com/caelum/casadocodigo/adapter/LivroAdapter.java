@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -48,6 +50,9 @@ public class LivroAdapter extends RecyclerView.Adapter {
         RecyclerLivroViewHolder holder = (RecyclerLivroViewHolder) viewHolder;
         Livro livro = livros.get(i);
         holder.campoNome.setText(livro.getNome());
+        Picasso picasso = Picasso.get();
+        picasso.setIndicatorsEnabled(true);
+        picasso.load(livro.getUrlFoto()).fit().into(holder.campoFoto);
     }
 
     @Override

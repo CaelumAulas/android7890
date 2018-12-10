@@ -1,23 +1,19 @@
 package br.com.caelum.casadocodigo.activity;
 
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
 import br.com.caelum.casadocodigo.delegate.LivroDelegate;
-import br.com.caelum.casadocodigo.delegate.RequisicaoDelegate;
 import br.com.caelum.casadocodigo.event.BuscaLivroEvent;
 import br.com.caelum.casadocodigo.fragment.CarregaFragment;
 import br.com.caelum.casadocodigo.fragment.DetalhesLivroFragment;
@@ -25,7 +21,7 @@ import br.com.caelum.casadocodigo.fragment.ListaLivroFragment;
 import br.com.caelum.casadocodigo.modelo.Livro;
 import br.com.caelum.casadocodigo.service.WebService;
 
-public class MainActivity extends AppCompatActivity implements LivroDelegate, RequisicaoDelegate {
+public class MainActivity extends AppCompatActivity implements LivroDelegate {
 
 
     @Override
@@ -33,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate, Re
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new WebService(this).listaLivros();
+        new WebService().listaLivros(0, 5);
 
         exibe(new CarregaFragment(), false);
     }
@@ -57,15 +53,22 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate, Re
 
 
     @Subscribe
-    @Override
     public void lidaComSucesso(BuscaLivroEvent event) {
         List<Livro> livros = event.getLivros();
-        ListaLivroFragment listaLivroFragment = ListaLivroFragment.getInstanceWith(livros);
-        exibe(listaLivroFragment,false);
+
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        Fragment fragment = supportFragmentManager.findFragmentById(R.id.frame_principal);
+
+        if (fragment instanceof  ListaLivroFragment) {
+            ListaLivroFragment listaLivroFragment = (ListaLivroFragment) fragment;
+            listaLivroFragment.adiciona(livros);
+        } else {
+            ListaLivroFragment listaLivroFragment = ListaLivroFragment.getInstanceWith(livros);
+            exibe(listaLivroFragment,false);
+        }
     }
 
     @Subscribe
-    @Override
     public void lidaComErro(Throwable erro) {
         Toast.makeText(this, "Deu erro" + erro.getMessage(), Toast.LENGTH_LONG).show();
     }
