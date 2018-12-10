@@ -24,7 +24,7 @@ public class LivroEndlessList extends RecyclerView.OnScrollListener {
                 pegandoNovosLivros = false;
             }
         }
-        if (!pegandoNovosLivros && totalItens == ultimoItemVisivel + 1) {
+        if (!pegandoNovosLivros && totalItens <= ultimoItemVisivel + 1 + 3) {
             new WebService().listaLivros(totalItens, 5);
             pegandoNovosLivros = true;
         }

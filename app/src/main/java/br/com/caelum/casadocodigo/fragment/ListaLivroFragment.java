@@ -3,12 +3,17 @@ package br.com.caelum.casadocodigo.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.mugen.Mugen;
+import com.mugen.MugenCallbacks;
+import com.mugen.attachers.RecyclerViewAttacher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,7 @@ public class ListaLivroFragment extends Fragment {
     @BindView(R.id.lista_livros)
     RecyclerView recyclerView;
     private ArrayList<Livro> livros;
+    private boolean pegandoNovosLivros;
 
     public static ListaLivroFragment getInstanceWith(List<Livro> livros) {
         ListaLivroFragment listaLivroFragment = new ListaLivroFragment();
@@ -54,14 +60,36 @@ public class ListaLivroFragment extends Fragment {
 
         recyclerView.setAdapter(new LivroAdapter(livros));
 
-        recyclerView.addOnScrollListener(new LivroEndlessList());
+        //recyclerView.addOnScrollListener(new LivroEndlessList());
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        RecyclerViewAttacher attacher = Mugen.with(recyclerView, new MugenCallbacks() {
+            @Override
+            public void onLoadMore() {
+                new WebService().listaLivros(livros.size(), 5);
+                pegandoNovosLivros = true;
+                Snackbar.make(recyclerView, "Carregando mais livros", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return pegandoNovosLivros;
+            }
+
+            @Override
+            public boolean hasLoadedAllItems() {
+                return false;
+            }
+        });
+        attacher.start();
+        attacher.setLoadMoreOffset(3);
     }
 
 
     public void adiciona(List<Livro> livros) {
+        pegandoNovosLivros = false;
         this.livros.addAll(livros);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
