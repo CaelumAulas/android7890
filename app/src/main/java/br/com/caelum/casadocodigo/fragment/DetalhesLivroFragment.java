@@ -91,7 +91,7 @@ public class DetalhesLivroFragment extends Fragment {
         String textoComprarEbook = String.format("Comprar Livro Ebook - R$ %.2f", livro.getValorVirtual());
         botaoComprarEbook.setText(textoComprarEbook);
 
-        String textoComprarAmbos = String.format("Comprar Livro Físico - R$ %.2f", livro.getValorDoisJuntos());
+        String textoComprarAmbos = String.format("Comprar Livro Ambos - R$ %.2f", livro.getValorDoisJuntos());
         botaoComprarAmbos.setText(textoComprarAmbos);
     }
 }
