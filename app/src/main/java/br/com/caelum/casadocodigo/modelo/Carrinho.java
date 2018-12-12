@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 public class Carrinho implements Serializable {
 
     private List<Item> itens = new ArrayList<>();

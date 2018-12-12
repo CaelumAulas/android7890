@@ -1,5 +1,6 @@
 package br.com.caelum.casadocodigo.fragment;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,16 +11,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 
+import javax.inject.Inject;
+
+import br.com.caelum.casadocodigo.CasaDoCodigoApplication;
 import br.com.caelum.casadocodigo.R;
+import br.com.caelum.casadocodigo.inject.CasaDoCodigoComponent;
+import br.com.caelum.casadocodigo.inject.DaggerCasaDoCodigoComponent;
 import br.com.caelum.casadocodigo.modelo.Autor;
+import br.com.caelum.casadocodigo.modelo.Carrinho;
+import br.com.caelum.casadocodigo.modelo.Item;
 import br.com.caelum.casadocodigo.modelo.Livro;
+import br.com.caelum.casadocodigo.modelo.TipoDeCompra;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DetalhesLivroFragment extends Fragment {
     @BindView(R.id.detalhes_livro_foto)
@@ -43,6 +54,13 @@ public class DetalhesLivroFragment extends Fragment {
     @BindView(R.id.detalhes_livro_isbn)
     TextView isbn;
 
+    private Carrinho carrinho;
+    private Livro livro;
+
+    @Inject
+    public void setCarrinho(Carrinho carrinho) {
+        this.carrinho = carrinho;
+    }
 
     public static DetalhesLivroFragment getInstanceWith(Livro livro) {
        DetalhesLivroFragment detalhesLivroFragment = new DetalhesLivroFragment();
@@ -59,11 +77,34 @@ public class DetalhesLivroFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
-        Livro livro = (Livro) bundle.getSerializable("livro");
+        livro = (Livro) bundle.getSerializable("livro");
         populaCamposCom(livro);
+
+        CasaDoCodigoApplication.getInstance().getComponent().inject(this);
 
         return view;
     }
+
+    @OnClick({ R.id.detalhes_livro_comprar_fisico,
+                R.id.detalhes_livro_comprar_ebook,
+                R.id.detalhes_livro_comprar_ambos })
+    public void selecionaItem(View button) {
+        Item item = new Item(livro, defineTipoDeCompra(button));
+        carrinho.adiciona(item);
+        Toast.makeText(getContext(), "Livro adicionado", Toast.LENGTH_SHORT).show();
+    }
+
+    private TipoDeCompra defineTipoDeCompra(View button) {
+        switch (button.getId()) {
+            case R.id.detalhes_livro_comprar_fisico:
+                return TipoDeCompra.FISICO;
+            case R.id.detalhes_livro_comprar_ebook:
+                return TipoDeCompra.VIRTUAL;
+            default:
+                return TipoDeCompra.JUNTOS;
+        }
+    }
+
 
     private void populaCamposCom(Livro livro) {
         nome.setText(livro.getNome());

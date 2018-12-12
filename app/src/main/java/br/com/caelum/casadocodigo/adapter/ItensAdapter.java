@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
@@ -40,6 +42,8 @@ public class ItensAdapter extends RecyclerView.Adapter {
         Item item = items.get(position);
 
         String valorComprado = retornaValorCompradoDo(item);
+
+        Picasso.get().load(item.getLivro().getUrlFoto()).into(holder.fotoLivro);
 
         holder.nomeItem.setText(item.getLivro().getNome());
         holder.valorComprado.setText(valorComprado);
