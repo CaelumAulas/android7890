@@ -29,10 +29,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LivroAdapter extends RecyclerView.Adapter {
+public class LivroItemUnicoAdapter extends RecyclerView.Adapter {
     private List<Livro> livros;
 
-    public LivroAdapter(List<Livro> livros) {
+    public LivroItemUnicoAdapter(List<Livro> livros) {
         this.livros = livros;
     }
 
