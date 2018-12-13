@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -38,4 +39,5 @@ dependencies {
     implementation 'com.vinaysshenoy:mugen:1.0.2'
     implementation 'com.google.dagger:dagger:2.19'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.19'
+    implementation 'com.google.firebase:firebase-auth:16.0.1'
 }
