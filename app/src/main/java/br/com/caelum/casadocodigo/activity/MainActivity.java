@@ -11,9 +11,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.RemoteMessage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -55,6 +57,11 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void avisaNotificacao(RemoteMessage message) {
+        Toast.makeText(this, "chegou!" +message.getNotification().getBody(), Toast.LENGTH_LONG).show();
     }
 
     @Override
