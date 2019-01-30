@@ -2,15 +2,21 @@ package br.com.caelum.casadocodigo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +43,18 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate {
         setContentView(R.layout.activity_main);
 
         new WebService().listaLivros(0, 5);
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.i("TOKEN", "deu ruim pra pegar!", task.getException());
+                } else {
+                    String token = task.getResult().getToken();
+                    Log.i("TOKEN", "token atual:"+ token);
+                }
+            }
+        });
 
         exibe(new CarregaFragment(), false);
     }
