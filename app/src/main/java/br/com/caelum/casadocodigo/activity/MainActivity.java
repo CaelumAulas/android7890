@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate {
                     Log.i("TOKEN", "deu ruim pra pegar!", task.getException());
                 } else {
                     String token = task.getResult().getToken();
+
+                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                    new WebService().cadastraCelular(email, token);
                     Log.i("TOKEN", "token atual:"+ token);
                 }
             }
